@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>three.js webgl - lights - spotlight</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+ 
+</head>
+
+<body>
+
+  <div id="info">
+    <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> webgl - spotlight<br />
+  </div>
+
+  <!-- Import maps polyfill -->
+  <!-- Remove this when import maps will be widely supported -->
+  <!-- <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script> -->
+
+  <script type="importmap">
+			{
+				"imports": {
+					"three": "https://unpkg.com/three@0.138.3/build/three.module.js"
+					
+				}
+			}
+		</script>
+
+  <script type="module">
+
+    import * as THREE from 'three';
+
+    import { GUI } from 'https://unpkg.com/three@0.138.3/examples/jsm/libs/lil-gui.module.min.js';
+
+    import { PLYLoader } from 'https://unpkg.com/three@0.138.3/examples/jsm/loaders/PLYLoader.js';
+    import { OrbitControls } from 'https://unpkg.com/three@0.138.3/examples/jsm/controls/OrbitControls.js';
+
+    let renderer, scene, camera;
+
+    let spotLight, lightHelper;
+
+    init();
+
+    function init() {
+      
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const cube = new THREE.Mesh(geometry, material);
+      cube.scale.set(0.1, 0.1, 0.1)
+      scene.add(cube);
+
+      camera.position.z = 5;
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        cube.rotation.x += 0.01;
+        cube.rotation.y += 0.01;
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+    }
+
+    function onWindowResize() {
+
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+    }
+
+    function render() {
+
+      const time = performance.now() / 3000;
+
+      spotLight.position.x = Math.cos(time) * 25;
+      spotLight.position.z = Math.sin(time) * 25;
+
+      lightHelper.update();
+
+      renderer.render(scene, camera);
+
+    }
+
+  </script>
+
+</body>
+
+</html>
